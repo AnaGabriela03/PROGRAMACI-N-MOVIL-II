@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marsphotos.R
 import com.example.marsphotos.ui.screens.HomeScreen
@@ -46,8 +47,12 @@ fun MarsPhotosApp() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            val marsViewModel: MarsViewModel =
+            /*val marsViewModel: MarsViewModel =
                 viewModel(factory = MarsViewModel.Factory)
+             */
+
+            val marsViewModel: MarsViewModel = hiltViewModel()
+
             HomeScreen(
                 marsUiState = marsViewModel.marsUiState,
                 contentPadding = it
@@ -69,3 +74,4 @@ fun MarsTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = 
         modifier = modifier
     )
 }
+
