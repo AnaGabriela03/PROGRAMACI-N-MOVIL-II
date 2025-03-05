@@ -3,6 +3,7 @@ package com.example.broadcastreceiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.telephony.SmsManager
 import android.telephony.TelephonyManager
 import android.util.Log
 
@@ -23,7 +24,19 @@ class BroadcastReceiver : BroadcastReceiver() {
 
                 if (numeroEntrante == numeroGuardado) {
                     Log.d(tag, "¡Número detectado! Enviando SMS...")
+                    enviarSMS(numeroEntrante, mensaje ?: "", context)
                 }
+            }
+        }
+    }
+    private fun enviarSMS(numero: String?, mensaje: String, context: Context?) {
+        if (numero != null && mensaje.isNotEmpty() && context != null) {
+            try {
+                val smsManager = SmsManager.getDefault()
+                smsManager.sendTextMessage(numero, null, mensaje, null, null)
+                Log.d(tag, "SMS enviado correctamente a $numero")
+            } catch (e: Exception) {
+                Log.e(tag, "Error al enviar SMS: ${e.message}")
             }
         }
     }
