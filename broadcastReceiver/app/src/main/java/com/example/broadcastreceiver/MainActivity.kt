@@ -44,6 +44,9 @@ fun Interfaz(context: Context, modifier: Modifier = Modifier) {
     var message by remember { mutableStateOf("") }
     var showSnackbar by remember { mutableStateOf(false) }
 
+    val serviceIntent = Intent(context, ServicePhoneState::class.java)
+    context.startService(serviceIntent)
+
     val sharedPreferences = context.getSharedPreferences("datos", Context.MODE_PRIVATE)
 
     Scaffold(
