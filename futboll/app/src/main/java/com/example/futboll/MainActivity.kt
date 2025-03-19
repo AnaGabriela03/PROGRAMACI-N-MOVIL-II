@@ -37,7 +37,23 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun FutbollGameScreen(sensorViewModel: SensorViewModel) {
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenWidth = with(density) { configuration.screenWidthDp.dp.toPx() }
+    val screenHeight = with(density) { configuration.screenHeightDp.dp.toPx() }
 
+    val ballRadius = 20f
+    var ballX by remember { mutableStateOf(screenWidth / 2) }
+    var ballY by remember { mutableStateOf(screenHeight / 2) }
+
+    val goalWidth = 200f
+    val goalHeight = 100f
+    val penaltyBoxWidth = 600f
+    val penaltyBoxHeight = 300f
+
+    val topGoal = Offset((screenWidth - goalWidth) / 2, 50f)
+    val bottomGoalY = screenHeight - 150f
+    val bottomGoal = Offset((screenWidth - goalWidth) / 2, bottomGoalY)
 
     var scoreTop by remember { mutableStateOf(0) }
     var scoreBottom by remember { mutableStateOf(0) }
@@ -68,7 +84,45 @@ fun FutbollGameScreen(sensorViewModel: SensorViewModel) {
             }
         }
 
-      
+        Box(modifier = Modifier.weight(1f)) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                //Fondo de la cancha
+                for (i in 0 until 12) {
+                    val color = if (i % 2 == 0) Color(0xFF4CAF50) else Color(0xFF388E3C)
+                    drawRect(
+                        color = color,
+                        topLeft = Offset(0f, i * (screenHeight / 12)),
+                        size = Size(screenWidth, screenHeight / 12)
+                    )
+                }
+
+                //Definir las lineas que delimitan la cancha
+                val fieldHeight = screenHeight - 130f
+                val pitchOutline = Path().apply {
+                    moveTo(50f, 50f)
+                    lineTo(screenWidth - 50f, 50f)
+                    lineTo(screenWidth - 50f, fieldHeight)
+                    lineTo(50f, fieldHeight)
+                    close()
+                    moveTo(50f, screenHeight / 2)
+                    lineTo(screenWidth - 50f, screenHeight / 2)
+                }
+
+                //Dibujo de la cancha
+                drawPath(path = pitchOutline, color = Color.White, style = Stroke(3.dp.toPx()))
+                drawCircle(color = Color.White, center = Offset(screenWidth / 2, screenHeight / 2), radius = 10f)
+                drawCircle(color = Color.White, center = Offset(screenWidth / 2, screenHeight / 2), radius = 100f, style = Stroke(3.dp.toPx()))
+
+                drawRect(color = Color.White, topLeft = topGoal, size = Size(goalWidth, goalHeight), style = Stroke(3.dp.toPx()))
+                drawRect(color = Color.White, topLeft = Offset(screenWidth / 2 - 300f, 50f), size = Size(penaltyBoxWidth, penaltyBoxHeight), style = Stroke(3.dp.toPx()))
+
+                drawRect(color = Color.White, topLeft = bottomGoal, size = Size(goalWidth, goalHeight), style = Stroke(3.dp.toPx()))
+                drawRect(color = Color.White, topLeft = Offset(screenWidth / 2 - 300f, bottomGoalY - 200f), size = Size(penaltyBoxWidth, penaltyBoxHeight), style = Stroke(3.dp.toPx()))
+
+                //Pelota
+                drawCircle(color = Color.White, radius = ballRadius, center = Offset(ballX, ballY))
+            }
+        }
 
         Spacer(modifier = Modifier.height(4.dp))
 
