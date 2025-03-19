@@ -38,4 +38,59 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun FutbollGameScreen(sensorViewModel: SensorViewModel) {
 
+
+    var scoreTop by remember { mutableStateOf(0) }
+    var scoreBottom by remember { mutableStateOf(0) }
+
+
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxWidth().height(60.dp),
+            color = Color(0xFF333333),
+            shadowElevation = 4.dp
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "$scoreTop",
+                    color = Color(0xFFFFD700),
+                    fontSize = 24.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+            }
+        }
+
+      
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            color = Color(0xFF333333),
+            shadowElevation = 4.dp
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "$scoreBottom",
+                    color = Color(0xFFFFD700),
+                    fontSize = 22.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+            }
+        }
+    }
 }
