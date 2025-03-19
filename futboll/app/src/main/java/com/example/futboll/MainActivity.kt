@@ -58,8 +58,34 @@ fun FutbollGameScreen(sensorViewModel: SensorViewModel) {
     var scoreTop by remember { mutableStateOf(0) }
     var scoreBottom by remember { mutableStateOf(0) }
 
+    LaunchedEffect(sensorViewModel.acceleration) {
+        sensorViewModel.acceleration.collect { (ax, ay, _) ->
+            //Definimos el nuevo movimiento y delimitando que no salga de la cancha
+            val newBallX = min(max(ballX - ax * 5, ballRadius + 60f), screenWidth - ballRadius - 60f)
+            val newBallY = min(max(ballY + ay * 5, ballRadius + 60f), bottomGoalY - ballRadius)
 
+            // Se detecta si toca las porterias
+            val isGoalTop = newBallY - ballRadius <= topGoal.y + goalHeight &&
+                    newBallX in topGoal.x..(topGoal.x + goalWidth)
+            val isGoalBottom = newBallY + ballRadius >= bottomGoal.y &&
+                    newBallX in bottomGoal.x..(bottomGoal.x + goalWidth)
 
+            //Cambia la posicion de la pelota segun el suceso
+            if (isGoalTop) {
+                scoreBottom++
+                ballX = screenWidth / 2
+                ballY = screenHeight / 2
+            } else if (isGoalBottom) {
+                scoreTop++
+                ballX = screenWidth / 2
+                ballY = screenHeight / 2
+            } else {
+                ballX = newBallX
+                ballY = newBallY
+            }
+        }
+    }
+    
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
